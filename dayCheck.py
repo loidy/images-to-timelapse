@@ -3,7 +3,7 @@ import pytesseract
 from pytesseract import Output
 
 # Set the path to the Tesseract OCR executable
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' #add to project localy later
 
 def extract_datetime_from_image(image_path):
     img = cv2.imread(image_path)
