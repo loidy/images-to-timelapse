@@ -1,7 +1,5 @@
 # images-to-timelapse
 
-In summary, I want to:
-
 1. filter out or fix corrupted photos in a batch
 1. filter out photos that show night
 1. adjust brightness of too dark photos to match the rest
@@ -258,4 +256,19 @@ def frame_difference(frame1, frame2, threshold=30):
     gray1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
     gray2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
     diff = cv2.absdiff(gray1, gray2)
-    _, thresh =
+    _, thresh = ...
+```
+
+## Jupyter Server
+
+To run jupyter server you can build docker image and run on desired port.
+
+```bash
+docker build -t jupyter .
+docker run -d --name jupyter \
+    -u 1003 -p 8080:8080 \
+    --restart unless-stopped \
+    -v $PWD/src:/home/jupyter/images-to-timelapse \
+    jupyter \
+    jupyter lab --config jupyter_server_config.py --collaborative
+```
