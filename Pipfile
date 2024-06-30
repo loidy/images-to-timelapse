@@ -11,6 +11,7 @@ numpy = "*"
 jupyter-client = "*"
 jupyter-server = "*"
 jupyterlab-link-share = "*"
+jupyter-collaboration = "*"
 
 [dev-packages]
 
