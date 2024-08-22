@@ -1,22 +1,36 @@
 import cv2
-import pytesseract
-from pytesseract import Output
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+from tqdm.auto import tqdm
 
-# Set the path to the Tesseract OCR executable
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe' #add to project localy later
+input_folder = r"C:\Users\patri\OneDrive\Desktop\image_generator\2024-01-20\001\jpg\test"
 
-def extract_datetime_from_image(image_path):
-    img = cv2.imread(image_path)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    h, w = gray.shape
-    cropped = gray[0:int(h*0.1), int(w*0.75):w]
-    cropped = cv2.threshold(cropped, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-    config = '--psm 6' 
-    text = pytesseract.image_to_string(cropped, config=config)
+def detect_saturation(image, saturation_threshold=20):
+    hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    h, s, v = cv2.split(hsv)
+    print(s.max())
+    return s.max() <= saturation_threshold
 
-    return text.strip()
+def walkdir(folder):
+    """Walk through every files in a directory"""
+    for dirpath, dirs, files in os.walk(folder):
+        for filename in files:
+            yield os.path.join(dirpath, filename)
 
-if __name__ == "__main__":
-    image_path = "path/to/image"
-    extracted_text = extract_datetime_from_image(image_path)
-    print(f"Date and time: {extracted_text}")
+night_images = 0
+day_images = 0
+for filepath in tqdm([filepath for filepath in walkdir(input_folder) if filepath.endswith('.jpg')]):
+    img = cv2.imread(filepath)
+
+    if 'jpg/02/15' in filepath:
+        print(filepath)
+        plt.imshow(img)
+        plt.show()
+    if img is not None and detect_saturation(img):
+        night_images += 1
+    else:
+        day_images += 1
+        print(f"Day image: {filepath}")
+
+print(f'{night_images} night images detected over {night_images + day_images}')
